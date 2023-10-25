@@ -1,72 +1,33 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Chopcast",
+    "description": "Chopcast lets users create short clips from long videos such as podcasts, tv shows for social media.",
+    "version": "1.0.0",
+    "termsOfService": "https://example.com/terms/",
+    "contact": {
+      "name": "Chopcast API Support",
+      "url": "https://www.example.com/support",
+      "email": "support@example.com"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.staging.chopcast.io/api/v1"
     }
   ],
   "security": [
-    {
-      "bearerAuth": []
-    }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/videos/youtube/": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Downloads the video from given youtube url and creates the clips",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "Video to create clips from.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Youtube_video"
               }
             }
           },
@@ -77,18 +38,45 @@
             "description": "plant response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                "example": {
+                  "uuid": "4d71b287-0887-447f-b11d-08a70a8c2373",
+                  "clips": 0,
+                  "format": null,
+                  "ready": true,
+                  "created_at": "2023-10-25T10:34:47.722821Z",
+                  "updated_at": "2023-10-25T10:34:47.722837Z",
+                  "name": "Piers Morgan slams Megan Rapinoe: 'She's the world's most annoying sports star'",
+                  "parts_to_find": null,
+                  "video_for_platform": null,
+                  "length_of_clip": null,
+                  "video_topic_list": null,
+                  "number_of_clips": null,
+                  "video_file": null,
+                  "audio_file": null,
+                  "_text_clusters": null,
+                  "keymoments": null,
+                  "thumbnail": null,
+                  "width": null,
+                  "height": null,
+                  "duration": null,
+                  "transcription_status": "pending",
+                  "acg_status": "pending",
+                  "deduct_credit": true,
+                  "audio_features": null,
+                  "audio_cleaned": false,
+                  "like": false,
+                  "dislike": false,
+                  "folder": null
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "401": {
+            "description": "Authentication error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/auth_error"
                 }
               }
             }
@@ -116,12 +104,12 @@
             "description": "Plant deleted",
             "content": {}
           },
-          "400": {
+          "401": {
             "description": "unexpected error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/auth_error"
                 }
               }
             }
@@ -132,63 +120,67 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "Youtube_video": {
         "type": "object",
         "properties": {
           "name": {
-            "description": "The name of the plant",
             "type": "string"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+          "youtube_url": {
+            "type": "string",
+            "format": "uri"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
+          "folder": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "with_acg": {
+            "type": "boolean"
+          },
+          "number_of_clips": {
             "type": "integer",
             "format": "int32"
           },
-          "message": {
+          "length_of_clip": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "video_topic_list": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "video_for_platform": {
             "type": "string"
+          },
+          "parts_to_find": {
+            "type": "string"
+          },
+          "callback_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "youtube_url"
+        ]
+      },
+      "auth_error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Authentication credentials were not provided."
           }
         }
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "api_key": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter value as follows: Api-Key <api_key here>"
       }
     }
   }
