@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "Chopcast",
     "description": "Chopcast lets users create short clips from long videos such as podcasts, tv shows for social media.",
@@ -17,10 +17,14 @@
     }
   ],
   "security": [
+    {
+      "api_key": []
+    }
   ],
   "paths": {
     "/videos/youtube/": {
       "post": {
+        "summary": "Upload youtube video",
         "description": "Downloads the video from given youtube url and creates the clips",
         "requestBody": {
           "description": "Video to create clips from.",
@@ -35,38 +39,11 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "video response",
             "content": {
               "application/json": {
-                "example": {
-                  "uuid": "4d71b287-0887-447f-b11d-08a70a8c2373",
-                  "clips": 0,
-                  "format": null,
-                  "ready": true,
-                  "created_at": "2023-10-25T10:34:47.722821Z",
-                  "updated_at": "2023-10-25T10:34:47.722837Z",
-                  "name": "Piers Morgan slams Megan Rapinoe: 'She's the world's most annoying sports star'",
-                  "parts_to_find": null,
-                  "video_for_platform": null,
-                  "length_of_clip": null,
-                  "video_topic_list": null,
-                  "number_of_clips": null,
-                  "video_file": null,
-                  "audio_file": null,
-                  "_text_clusters": null,
-                  "keymoments": null,
-                  "thumbnail": null,
-                  "width": null,
-                  "height": null,
-                  "duration": null,
-                  "transcription_status": "pending",
-                  "acg_status": "pending",
-                  "deduct_credit": true,
-                  "audio_features": null,
-                  "audio_cleaned": false,
-                  "like": false,
-                  "dislike": false,
-                  "folder": null
+                "schema": {
+                  "$ref": "#/components/schemas/video"
                 }
               }
             }
@@ -80,6 +57,132 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/auth/jwt/create/": {
+      "post": {
+        "summary": "Create JWT (JSON Web Token)",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SampleTokenResponse"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/key/create/": {
+      "post": {
+        "description": "Endpoint to create a new API-Key for the requesting user",
+        "summary": "Create a new API key",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the api key"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwtAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ApiKeyResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/clips/": {
+      "get": {
+        "parameters": [
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "video",
+            "in": "query",
+            "description": "This parameter allows you to filter clips based on their association with a specific video using its unique identifier (UUID).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/clip_response"
           }
         }
       }
@@ -98,8 +201,7 @@
             "format": "uri"
           },
           "folder": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "with_acg": {
             "type": "boolean"
@@ -132,12 +234,230 @@
           "youtube_url"
         ]
       },
-      "auth_error": {
+      "video": {
+        "example": {
+          "uuid": "4d71b287-0887-447f-b11d-08a70a8c2373",
+          "clips": 0,
+          "format": null,
+          "ready": true,
+          "created_at": "2023-10-25T10:34:47.722821Z",
+          "updated_at": "2023-10-25T10:34:47.722837Z",
+          "name": "Piers Morgan slams Megan Rapinoe: 'She's the world's most annoying sports star'",
+          "parts_to_find": null,
+          "video_for_platform": null,
+          "length_of_clip": null,
+          "video_topic_list": null,
+          "number_of_clips": null,
+          "video_file": null,
+          "audio_file": null,
+          "_text_clusters": null,
+          "keymoments": null,
+          "thumbnail": null,
+          "width": null,
+          "height": null,
+          "duration": null,
+          "transcription_status": "pending",
+          "acg_status": "pending",
+          "deduct_credit": true,
+          "audio_features": null,
+          "audio_cleaned": false,
+          "like": false,
+          "dislike": false,
+          "folder": null
+        }
+      },
+      "clip": {
         "type": "object",
         "properties": {
-          "detail": {
-            "type": "string",
-            "description": "Authentication credentials were not provided."
+          "uuid": {
+            "type": "string"
+          },
+          "video": {
+            "type": "string"
+          },
+          "clip_cuts": {
+            "type": null
+          },
+          "start_time": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "end_time": {
+            "type": "number"
+          },
+          "video_duration": {
+            "type": "number"
+          },
+          "clip_duration": {
+            "type": "number"
+          },
+          "clip_duration_before_cuts": {
+            "type": "number"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "fit_color": {
+            "type": "string"
+          },
+          "is_dirty": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": "string"
+          },
+          "resize_type": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "is_acg": {
+            "type": "boolean"
+          },
+          "video_format": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "audio_features": {
+            "type": null
+          },
+          "audio_cleaned": {
+            "type": "boolean"
+          },
+          "like": {
+            "type": "boolean"
+          },
+          "dislike": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "responses": {
+      "SampleTokenResponse": {
+        "description": "Sample response with tokens",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refresh": {
+                  "type": "string",
+                  "example": "Jhbfsff6IkpXVCJ9.eyJb2tlbBlIjoicmVmcmVzaCIsImV4cC1MywianRpIjoiYjNlYWZiYTIyMGJmNDcyM2E3ZWRiNWY2NTY8..."
+                },
+                "access": {
+                  "type": "string",
+                  "example": "eyJhbs1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl9NjZXNzIiwiZXhwIjoxNjk4Mzk0NTUzLCJhc3QuaW8ifQ.WJjQr6P4631Dty8_34ses..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Unauthorized: No active account found with the given credentials",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "detail": "No active account found with the given credentials"
+              }
+            }
+          }
+        }
+      },
+      "ApiKeyResponse": {
+        "description": "Api Key created",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "prefix": {
+                      "type": "string"
+                    },
+                    "hashed_key": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "revoked": {
+                      "type": "boolean"
+                    },
+                    "expiry_date": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "api_key": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "clip_response": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string"
+                },
+                "previous": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -147,7 +467,13 @@
         "type": "apiKey",
         "name": "Authorization",
         "in": "header",
-        "description": "Enter value as follows: Api-Key <api_key here>"
+        "description": "Authentication header of the form `Api-Key <key>`, where <key> is your api key."
+      },
+      "jwtAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "JWT authentication header of the form `JWT <token>`, where `<token>` is your auth token."
       }
     }
   }
