@@ -49,14 +49,7 @@
             }
           },
           "401": {
-            "description": "Authentication error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/auth_error"
-                }
-              }
-            }
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       }
@@ -111,7 +104,7 @@
     "/key/create/": {
       "post": {
         "description": "Endpoint to create a new API-Key for the requesting user",
-        "summary": "Create a new API key",
+        "summary": "Create API key",
         "requestBody": {
           "content": {
             "application/json": {
@@ -184,6 +177,140 @@
           "200": {
             "$ref": "#/components/responses/clip_response"
           }
+        }
+      }
+    },
+    "/clips/{uuid}/export/": {
+      "get": {
+        "description": "Endpoint to list export jobs of clip",
+        "summary": "List export jobs of clip",
+        "tags": [
+          "Export Job"
+        ],
+        "parameters": [
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "A UUID string identifying this clip.",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "video",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ClipExportResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Endpoint to export clip, creates export job and return its details",
+        "summary": "Export clip",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "A UUID string identifying this clip.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "burn_subtitles": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "highlight_subtitle_word": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "preview_height": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 2147483647
+                  },
+                  "preview_width": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 2147483647
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/ClipExportCreateResponse"
+          }
+        }
+      },
+      "delete": {
+        "description": "Endpoint to cancel export job of clip if any",
+        "summary": "Cancel current export job",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "A UUID string identifying this clip.",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "responses": {
         }
       }
     }
@@ -455,6 +582,272 @@
                   "type": "array",
                   "items": {
                   }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ClipExportResponse": {
+        "description": "Response for Clip Export List",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "example": 123
+                },
+                "next": {
+                  "type": "string",
+                  "example": "http://api.example.org/accounts/?page=4"
+                },
+                "previous": {
+                  "type": "string",
+                  "example": "http://api.example.org/accounts/?page=2"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "uuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T06:47:15.497Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T06:47:15.497Z"
+                      },
+                      "elapsed_time": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_file": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "clip_audio_file": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "pending"
+                      },
+                      "started_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T06:47:15.497Z"
+                      },
+                      "ended_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T06:47:15.497Z"
+                      },
+                      "cancelled_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T06:47:15.497Z"
+                      },
+                      "clip_start_time": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_end_time": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_width": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_height": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_x": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_y": {
+                        "type": "integer",
+                        "example": 0
+                      },
+                      "clip_fit_color": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "job_uuid": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      },
+                      "thumbnail": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "burn_subtitles": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "highlight_subtitle_word": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "preview_height": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 2147483647
+                      },
+                      "preview_width": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 2147483647
+                      },
+                      "created_by": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      },
+                      "clip": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ClipExportCreateResponse": {
+        "description": "Response for Clip Export Details",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-10-27T06:53:58.812Z"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-10-27T06:53:58.812Z"
+                },
+                "elapsed_time": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_file": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "clip_audio_file": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "pending"
+                },
+                "started_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-10-27T06:53:58.812Z"
+                },
+                "ended_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-10-27T06:53:58.812Z"
+                },
+                "cancelled_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2023-10-27T06:53:58.812Z"
+                },
+                "clip_start_time": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_end_time": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_width": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_height": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_x": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_y": {
+                  "type": "integer",
+                  "example": 0
+                },
+                "clip_fit_color": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "job_uuid": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                },
+                "thumbnail": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "burn_subtitles": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "highlight_subtitle_word": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "preview_height": {
+                  "type": "integer",
+                  "format": "int32",
+                  "example": 2147483647
+                },
+                "preview_width": {
+                  "type": "integer",
+                  "format": "int32",
+                  "example": 2147483647
+                },
+                "created_by": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                },
+                "clip": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
                 }
               }
             }

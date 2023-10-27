@@ -32,7 +32,6 @@
     }
   ],
   "anchors": [
-
   ],
   "navigation": [
     {
@@ -62,10 +61,13 @@
     {
       "group": "Endpoints",
       "pages": [
+        "api-reference/endpoint/upload-youtube-video",
         "api-reference/endpoint/create-jwt-json-web-token",
         "api-reference/endpoint/create-api-key",
-        "api-reference/endpoint/upload-youtube-video",
-        "api-reference/endpoint/get-clips"
+        "api-reference/endpoint/get-clips",
+        "api-reference/endpoint/list-export-jobs-of-clip",
+        "api-reference/endpoint/export-clip",
+        "api-reference/endpoint/cancel-current-export-job"
       ]
     }
   ],
@@ -74,5 +76,7 @@
     "github": "https://github.com/mintlify",
     "linkedin": "https://www.linkedin.com/company/mintsearch"
   },
-  "openapi": ["api-reference/openapi.json"]
+  "openapi": [
+    "api-reference/openapi.json"
+  ]
 }
