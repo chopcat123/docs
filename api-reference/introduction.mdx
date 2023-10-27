@@ -1,28 +1,79 @@
 ---
-title: 'Introduction'
-description: 'Chopcast api section intro here'
+title: Introduction
+description: Learn how to integrate Chopcast into your application and create short clips from long videos.
 ---
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Welcome to the Chopcast API Documentation. Chopcast API allows you to create short clips from long videos, making it ideal for use cases such as podcasts and TV shows for social media.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Chopcast API requires two levels of authentication: **JWT (JSON Web Token)** and **API Key**.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+### JWT Authentication
+
+JWT is used for user login and obtaining an API key. To authenticate, send a POST request to `/auth/jwt/create/` with your email and password. Upon successful login, you will receive a JWT (JSON Web Token) in the response, which you should include in the `Authorization` header of your subsequent requests using the format `JWT <token>`.
+
+### API Key Authentication
+
+Once you have obtained a JWT, you can create an API Key by sending a POST request to `/key/create/`. Provide the API key's name in the request body. The API Key serves as your authentication method for all other endpoints. Include it in the `Authorization` header with the format `Api-Key <key>`.
+
+## Base URL
+
+The base URL for the Chopcast API is `https://api.staging.chopcast.io/api/v1`.
+
+## Endpoints
+
+### Upload YouTube Video
+
+- **URL:** `/videos/youtube/`
+- **Method:** POST
+- **Description:** This endpoint allows you to upload a video from a YouTube URL and create clips from it.
+- **Request Body:** The request body should be a JSON object of the type `Youtube_video`.
+- **Response:** Returns a JSON object of the type `video`.
+
+### Get Clips
+
+- **URL:** `/clips/`
+- **Method:** GET
+- **Parameters:** You can provide optional parameters for ordering, pagination, and filtering. Filter clips based on their association with a specific video using its unique identifier (UUID).
+- **Authentication:** Requires an API Key.
+- **Response:** Returns a list of clips.
+
+### List Export Jobs of Clip
+
+- **URL:** `/clips/{uuid}/export/`
+- **Method:** GET
+- **Parameters:** Requires a UUID string identifying the clip. You can also provide optional parameters for ordering and pagination.
+- **Authentication:** Requires an API Key.
+- **Response:** Returns a list of export jobs related to the specified clip.
+
+### Create Export Job for clip
+
+- **Method:** POST
+- **Description:** Export a clip, create an export job, and return its details.
+- **Request Body:** Specify export options such as burning subtitles and highlighting subtitle words.
+- **Authentication:** Requires an API Key.
+- **Response:** Returns details of the created export job.
+
+### Delete Export Job
+
+- **Method:** DELETE
+- **Description:** Cancel the current export job of the clip if any.
+- **Authentication:** Requires an API Key.
+
+
+## Error Handling
+
+In case of an error, the API will return a JSON response with an error message and the appropriate HTTP status code.
+
+## Terms of Service
+
+Please review and agree to the [Terms of Service](https://example.com/terms/) before using the Chopcast API.
+
+## Support
+
+For any inquiries, issues, or assistance, you can contact [Chopcast API Support](mailto:support@example.com).
+
+We're here to help you make the most of the Chopcast API and enhance your video clip creation capabilities.
