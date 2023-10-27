@@ -4,16 +4,16 @@
     "title": "Chopcast",
     "description": "Chopcast lets users create short clips from long videos such as podcasts, tv shows for social media.",
     "version": "1.0.0",
-    "termsOfService": "https://example.com/terms/",
+    "termsOfService": "https://www.chopcast.io/hubfs/Tribetactics%20Limited%20T_A%20Chopcast%20Terms%20of%20Service%20-%20Jan%204%202023.pdf",
     "contact": {
       "name": "Chopcast API Support",
-      "url": "https://www.example.com/support",
+      "url": "https://www.chopcast.io/contact-us",
       "email": "support@example.com"
     }
   },
   "servers": [
     {
-      "url": "https://api.staging.chopcast.io/api/v1"
+      "url": "https://api.chopcast.io/api/v1"
     }
   ],
   "security": [
