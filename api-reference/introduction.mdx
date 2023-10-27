@@ -21,48 +21,11 @@ Once you have obtained a JWT, you can create an API Key by sending a POST reques
 
 ## Base URL
 
-The base URL for the Chopcast API is `https://api.staging.chopcast.io/api/v1`.
+The base URL for the Chopcast API is `https://api.chopcast.io/api/v1`.
 
 ## Endpoints
 
-### Upload YouTube Video
-
-- **URL:** `/videos/youtube/`
-- **Method:** POST
-- **Description:** This endpoint allows you to upload a video from a YouTube URL and create clips from it.
-- **Request Body:** The request body should be a JSON object of the type `Youtube_video`.
-- **Response:** Returns a JSON object of the type `video`.
-
-### Get Clips
-
-- **URL:** `/clips/`
-- **Method:** GET
-- **Parameters:** You can provide optional parameters for ordering, pagination, and filtering. Filter clips based on their association with a specific video using its unique identifier (UUID).
-- **Authentication:** Requires an API Key.
-- **Response:** Returns a list of clips.
-
-### List Export Jobs of Clip
-
-- **URL:** `/clips/{uuid}/export/`
-- **Method:** GET
-- **Parameters:** Requires a UUID string identifying the clip. You can also provide optional parameters for ordering and pagination.
-- **Authentication:** Requires an API Key.
-- **Response:** Returns a list of export jobs related to the specified clip.
-
-### Create Export Job for clip
-
-- **Method:** POST
-- **Description:** Export a clip, create an export job, and return its details.
-- **Request Body:** Specify export options such as burning subtitles and highlighting subtitle words.
-- **Authentication:** Requires an API Key.
-- **Response:** Returns details of the created export job.
-
-### Delete Export Job
-
-- **Method:** DELETE
-- **Description:** Cancel the current export job of the clip if any.
-- **Authentication:** Requires an API Key.
-
+You can check all the endpoints [here](/api-reference/endpoint/)
 
 ## Error Handling
 
@@ -70,10 +33,10 @@ In case of an error, the API will return a JSON response with an error message a
 
 ## Terms of Service
 
-Please review and agree to the [Terms of Service](https://example.com/terms/) before using the Chopcast API.
+Please review and agree to the [Terms of Service](https://www.chopcast.io/contact-us) before using the Chopcast API.
 
 ## Support
 
-For any inquiries, issues, or assistance, you can contact [Chopcast API Support](mailto:support@example.com).
+For any inquiries, issues, or assistance, you can contact [Chopcast API Support](mailto:support@chopcast.io).
 
 We're here to help you make the most of the Chopcast API and enhance your video clip creation capabilities.
