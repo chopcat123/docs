@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Chopcast",
   "logo": {
-    "dark": "/logo/chopcast-logo-dark.png",
+    "dark": "/logo/chopcast-logo-light.png",
     "light": "/logo/chopcast-logo-light.png"
   },
   "favicon": "/favicon.png",
@@ -18,7 +18,7 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:support@chopcast.io"
+      "url": "https://www.chopcast.io/contact-us"
     }
   ],
   "topbarCtaButton": {
@@ -59,11 +59,12 @@
     }
   ],
   "footerSocials": {
+    "youtube": "https://www.youtube.com/channel/UC9R4QeMkICUvRuUtXYwBmAQ/featured",
+    "twitter": "https://twitter.com/chopcast_tweets",
+    "facebook": "https://www.facebook.com/chopcastofficial",
+    "instagram": "https://www.instagram.com/chopcast_official/"
   },
   "openapi": [
     "api-reference/openapi.json"
-  ],
-  "feedback": {
-    "raiseIssue": true
-  }
+  ]
 }
